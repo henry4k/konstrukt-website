@@ -1,0 +1,158 @@
+// TODO: Grundlegendes Layout von ästhetischen Details trennen.
+
+$primary-color: #1995dc;
+$break-small: 990px;
+$nav-width: 200px;
+$nav-margin: 10px;
+$box-padding: 10px;
+
+@mixin primary-text
+{
+    color: rgba(0, 0, 0, 0.87);
+}
+
+@mixin secondary-text
+{
+    color: rgba(0, 0, 0, 0.54);
+}
+
+@mixin hint-text
+{
+    color: rgba(0, 0, 0, 0.38);
+}
+
+@viewport
+{
+    width: device-width;
+    user-zoom: fixed;
+}
+
+body
+{
+    margin: 0;
+    background-color: #F8F8F8;
+    @include primary-text;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    word-wrap: break-word;
+    line-height: 1.5;
+}
+
+code
+{
+    font-size: 1.4em;
+}
+
+.limited-width
+{
+    margin: auto;
+    @media (min-width: $break-small) { max-width: $break-small; }
+}
+
+body > header
+{
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    background-color: $primary-color;
+    color: white;
+    box-shadow: 0 2px 5px hsl(0, 0%, 74%);
+    font-size: 1.3em;
+
+    nav > *
+    {
+        display: inline-block;
+        margin-top:    0.5em;
+        margin-bottom: 0.5em;
+        margin-left:   0;
+        margin-right:  1em;
+    }
+
+    a
+    {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    a:hover
+    {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    h1
+    {
+        display: inline;
+        margin: 0;
+        font-size: 1.2em;
+    }
+}
+
+.content nav
+{
+    position: fixed;
+    box-sizing: border-box;
+    float: left;
+    width: $nav-width;
+
+    background-color: rgba(0, 0, 0, 0.04);
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.1);
+
+    padding-top:    $box-padding;
+    padding-bottom: $box-padding;
+    padding-left:   $box-padding;
+    padding-right:  0;
+
+    ul
+    {
+        margin: 0;
+        padding-left: 1em;
+        list-style: none;
+        list-style-position: outside;
+    }
+
+    > ul
+    {
+        padding: 0;
+    }
+
+    a
+    {
+        box-sizing: border-box;
+        display: inline-block;
+        width: 100%;
+
+        border-right-style: solid;
+        border-right-width: 4px;
+        border-right-color: rgba($primary-color, 0.2);
+    }
+
+    a:hover, a:active
+    {
+        border-right-color: rgba($primary-color, 1.0);
+    }
+
+    a:hover
+    {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    a:active
+    {
+        background-color: rgba($primary-color, 0.2);
+    }
+}
+
+.content article
+{
+    width: auto;
+    padding-left: $nav-width + $nav-margin;
+}
+
+footer
+{
+    text-align: center;
+    @include secondary-text;
+}
