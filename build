@@ -1,2 +1,0 @@
-#!/bin/sh
-sassc -t nested -m style.scss style.css
