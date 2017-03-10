@@ -1,6 +1,8 @@
 // TODO: Grundlegendes Layout von ästhetischen Details trennen.
 
-$primary-color: #1995dc;
+@import "tex-gyre-schola/style.scss";
+
+$primary-color: #96381f;
 $break-small: 990px;
 $nav-width: 200px;
 $nav-margin: 10px;
@@ -30,9 +32,9 @@ $box-padding: 10px;
 body
 {
     margin: 0;
-    background-color: #F8F8F8;
+    background: linear-gradient(90deg, #f6ebcd, #fcf9e8 50%, #f6ebcd);
     @include primary-text;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "TeX Gyre Schola", serif;
     text-rendering: optimizeLegibility;
     word-wrap: break-word;
     line-height: 1.5;
@@ -40,6 +42,7 @@ body
 
 code
 {
+    font-family: "TeX Gyre Schola";
     font-size: 1.4em;
 }
 
@@ -55,8 +58,8 @@ body > header
     top: 0;
     left: 0;
 
-    background-color: $primary-color;
-    color: white;
+    background-color: darken(#f6ebcd, 10%);
+    color: $primary-color;
     box-shadow: 0 2px 5px hsl(0, 0%, 74%);
     font-size: 1.3em;
 
