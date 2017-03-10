@@ -1,30 +1,19 @@
-DEPLOY_ADDRESS = henry4k.de:www_konstrukt
+DEPLOY_TARGET = henry4k.de:www_konstrukt
 GENERATED += style.css
 
-include tex-gyre-schola/makefile.mk
+include style/makefile.mk
 
 .PHONY: all deploy clean
 
-all: $(FILES)
+.DEFAULT: all
+
+all: $(GENERATED)
 
 deploy: $(GENERATED)
-	mkdir tmp
-	cp index.html tmp/
-	cp style.css tmp/
-	mkdir tmp/tex-gyre-schola
-	cp tex-gyre-schola/*.woff tmp/tex-gyre-schola/
-	rsync -vr --delete-before tmp/* $(DEPLOY_ADDRESS)
-	rm -rf tmp
+	rsync -vrR --delete-before $(GENERATED) $(DEPLOY_TARGET)/
 
 clean:
 	rm -fv $(GENERATED)
 
-%.css: %.scss
+style.css: style/main.scss
 	sass --style expanded $^ $@
-
-%.woff: %.otf valid-chars.txt
-	pyftsubset $< --output-file=$@ --text-file=valid-chars.txt
-
-#%.html: %.md menu.lua template.html
-#	./gen-page $^ > $@
-
