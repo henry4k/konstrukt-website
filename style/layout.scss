@@ -2,6 +2,7 @@ $break-small: 990px;
 $nav-width: 200px;
 $nav-margin: 10px;
 $box-padding: 10px;
+$anchor-offset: 50px;
 
 @viewport
 {
@@ -12,6 +13,16 @@ $box-padding: 10px;
 body
 {
     margin: 0;
+}
+
+:target::before
+{
+    content: "";
+    display: block;
+    margin-top: -$anchor-offset;
+    height: $anchor-offset;
+    //pointer-events: none;
+    //animation: 0s 1s forwards collapse-anchor-padding-1;
 }
 
 .limited-width
