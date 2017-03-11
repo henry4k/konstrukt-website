@@ -21,8 +21,7 @@ body
     display: block;
     margin-top: -$anchor-offset;
     height: $anchor-offset;
-    //pointer-events: none;
-    //animation: 0s 1s forwards collapse-anchor-padding-1;
+    pointer-events: none;
 }
 
 .limited-width

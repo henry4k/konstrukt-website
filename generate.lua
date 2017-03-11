@@ -70,7 +70,7 @@ local function SetupAnchor( parent, id )
     end
 
     local anchor = cmark.node_new(cmark.NODE_CUSTOM_INLINE)
-    cmark.node_set_on_enter(anchor, string.format('<a href="#%s" id="%s">', id, id))
+    cmark.node_set_on_enter(anchor, string.format('<a href="#%s" id="%s" class="anchor">', id, id))
     cmark.node_set_on_exit(anchor, '</a>')
 
     -- Move child nodes into the anchor:
