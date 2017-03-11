@@ -1,0 +1,77 @@
+$break-small: 990px;
+$nav-width: 200px;
+$nav-margin: 10px;
+$box-padding: 10px;
+
+@viewport
+{
+    width: device-width;
+    user-zoom: fixed;
+}
+
+body
+{
+    margin: 0;
+}
+
+.limited-width
+{
+    margin: auto;
+    padding-left:  $box-padding;
+    padding-right: $box-padding;
+    @media (min-width: $break-small) { max-width: $break-small; }
+}
+
+body > header
+{
+    position: sticky;
+    top: 0;
+    left: 0;
+
+    nav > *
+    {
+        display: inline-block;
+        margin-top:    0.5em;
+        margin-bottom: 0.5em;
+        margin-left:   0;
+        margin-right:  1em;
+    }
+
+    h1
+    {
+        display: inline;
+        margin: 0;
+    }
+}
+
+.content nav
+{
+    position: fixed;
+    box-sizing: border-box;
+    float: left;
+    width: $nav-width;
+
+    padding-top:    $box-padding;
+    padding-bottom: $box-padding;
+    padding-left:   $box-padding;
+    padding-right:  0;
+
+    ul
+    {
+        margin: 0;
+        padding-left: 1em;
+    }
+
+    a
+    {
+        box-sizing: border-box;
+        display: inline-block;
+        width: 100%;
+    }
+}
+
+.content article
+{
+    width: auto;
+    padding-left: $nav-width + $nav-margin;
+}
