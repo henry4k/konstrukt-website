@@ -7,15 +7,15 @@
     </head>
     <body>
         <header>
-            <nav class="limited-width">
+            <nav class="limited-width" role="navigation">
                 <a href=""><h1>Konstrukt</h1></a>
                 {{#menu}}
                 <a href="{{url}}">{{{name}}}</a>
                 {{/menu}}
             </nav>
         </header>
-        <div class="limited-width content">
-            <nav>
+        <main class="limited-width">
+            <nav role="complementary">
                 <ul>
                 {{#index}}
                     <li>
@@ -28,13 +28,13 @@
                     </li>
                 {{/index}}
                 </ul>
-            </nav>
-            <article>
+            </nav><!--
+            --><article role="main">
                 {{{content}}}
             </article>
-            <footer>
-                <p>(c)2016 Henry Kielmann</p>
-            </footer>
-        </div>
+        </main>
+        <footer>
+            <p>(c)2016 Henry Kielmann</p>
+        </footer>
     </body>
 </html>

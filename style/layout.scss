@@ -1,8 +1,6 @@
 $break-small: 990px;
 $nav-width: 200px;
-$nav-margin: 10px;
 $box-padding: 10px;
-$fragment-offset: 75px;
 
 @viewport
 {
@@ -15,23 +13,6 @@ body
     margin: 0;
 }
 
-:target::before
-{
-    content: "";
-    display: block;
-    margin-top: -$fragment-offset;
-    height: $fragment-offset;
-    pointer-events: none;
-    animation: 0s 1s forwards collapse-fragment-padding-1
-}
-
-@keyframes collapse-anchor-padding-1 {
-    to {
-        margin-top: 0;
-        height: 0;
-    }
-}
-
 .limited-width
 {
     margin: auto;
@@ -40,12 +21,8 @@ body
     @media (min-width: $break-small) { max-width: $break-small; }
 }
 
-body > header
+header
 {
-    position: sticky;
-    top: 0;
-    left: 0;
-
     nav > *
     {
         display: inline-block;
@@ -62,12 +39,15 @@ body > header
     }
 }
 
-.content nav
+main nav
 {
-    position: fixed;
-    box-sizing: border-box;
-    float: left;
+    display: inline-block;
+    vertical-align: top;
     width: $nav-width;
+
+    position: sticky;
+    top: $box-padding;
+    box-sizing: border-box;
 
     padding-top:    $box-padding;
     padding-bottom: $box-padding;
@@ -88,10 +68,12 @@ body > header
     }
 }
 
-.content article
+article
 {
-    width: auto;
-    padding-left: $nav-width + $nav-margin;
+    display: inline-block;
+    vertical-align: top;
+    width: $break-small - $nav-width - $box-padding;
+    padding-left: $box-padding;
 
     img
     {
