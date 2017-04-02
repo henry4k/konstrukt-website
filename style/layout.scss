@@ -1,5 +1,4 @@
 $break-small: 990px;
-$nav-width: 200px;
 $box-padding: 10px;
 
 @viewport
@@ -39,15 +38,30 @@ header
     }
 }
 
+main
+{
+    padding-top: $box-padding;
+
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+
+    flex-direction: column;
+    @media (min-width: $break-small)
+    {
+        flex-direction: row;
+    }
+}
+
 main nav
 {
-    display: inline-block;
-    vertical-align: top;
-    width: $nav-width;
-
-    position: sticky;
-    top: $box-padding;
-    box-sizing: border-box;
+    flex: 0 0 auto;
+    min-width: 200px;
+    @media (min-width: $break-small)
+    {
+        position: sticky;
+        top: $box-padding;
+    }
 
     padding-top:    $box-padding;
     padding-bottom: $box-padding;
@@ -70,9 +84,8 @@ main nav
 
 article
 {
-    display: inline-block;
-    vertical-align: top;
-    width: $break-small - $nav-width - $box-padding;
+    flex: 1 0 0;
+
     padding-left: $box-padding;
 
     img
