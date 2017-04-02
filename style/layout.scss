@@ -2,7 +2,7 @@ $break-small: 990px;
 $nav-width: 200px;
 $nav-margin: 10px;
 $box-padding: 10px;
-$anchor-offset: 50px;
+$fragment-offset: 75px;
 
 @viewport
 {
@@ -19,9 +19,17 @@ body
 {
     content: "";
     display: block;
-    margin-top: -$anchor-offset;
-    height: $anchor-offset;
+    margin-top: -$fragment-offset;
+    height: $fragment-offset;
     pointer-events: none;
+    animation: 0s 1s forwards collapse-fragment-padding-1
+}
+
+@keyframes collapse-anchor-padding-1 {
+    to {
+        margin-top: 0;
+        height: 0;
+    }
 }
 
 .limited-width
@@ -84,4 +92,12 @@ body > header
 {
     width: auto;
     padding-left: $nav-width + $nav-margin;
+
+    img
+    {
+        max-width: 100%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
