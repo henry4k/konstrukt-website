@@ -21,6 +21,24 @@ local function CanonicalizeRelativePath( path )
     return table.concat(elements, '/')
 end
 
+local function ResolveRelativePath( path, basePath )
+    local relativePath
+    if basePath then
+        relativePath = basePath..'/'..path
+    else
+        relativePath = path
+    end
+    return CanonicalizeRelativePath(relativePath)
+end
+
+local function ResolveLocalUrlToPath( url, basePath )
+    if url[1] == '/' then -- handle absolute path
+        error('Absolute paths are not supported yet.')
+    else -- handle relative path
+        return ResolveRelativePath(url, basePath)
+    end
+end
+
 local function DirectoryTree( filePath, prefix )
     prefix = prefix or ''
     local function yieldTree( directory )
@@ -46,4 +64,6 @@ end
 
 return { stripHtmlTags = StripHtmlTags,
          canonicalizeRelativePath = CanonicalizeRelativePath,
+         resolveRelativePath = ResolveRelativePath,
+         resolveLocalUrlToPath = ResolveLocalUrlToPath,
          directoryTree = DirectoryTree }

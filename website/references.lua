@@ -7,24 +7,6 @@ local function IsUrlLocalPath( url )
     return not string.match(url, '^.-://')
 end
 
-local function ResolveRelativePath( path, basePath )
-    local relativePath
-    if basePath then
-        relativePath = basePath..'/'..path
-    else
-        relativePath = path
-    end
-    return utils.canonicalizeRelativePath(relativePath)
-end
-
-local function ResolveLocalPath( url, basePath )
-    if url[1] == '/' then -- handle absolute path
-        error('Absolute paths are not supported yet.')
-    else -- handle relative path
-        return ResolveRelativePath(url, basePath)
-    end
-end
-
 ---
 -- Finds and returns all references.
 --
@@ -49,7 +31,7 @@ local function LocateReferences( document, documentSourcePath )
             local reference = { node = node,
                                 url = url }
             if isLocalPath then
-                reference.sourcePath = ResolveLocalPath(url, basePath)
+                reference.sourcePath = utils.resolveLocalUrlToPath(url, basePath)
             end
             table.insert(references, reference)
         end

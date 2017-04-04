@@ -4,6 +4,27 @@ Konstrukt Website
 Just stuff that is used for the web representation of [Konstrukt](https://github.com/henry4k/konstrukt).
 
 
+Runtime dependencies
+--------------------
+
+- Lua 5.1+
+- Lua packages:
+  - LuaFileSystem
+  - CMark
+  - Lustache
+
+
+Development dependencies
+------------------------
+
+- prove (usually provided by Perl)
+- Lua packages:
+  - LuaCov
+  - LuaCov-Console
+  - LuaCheck
+  - Lua-TestMore
+
+
 Layout
 ------
 
