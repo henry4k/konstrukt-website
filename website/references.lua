@@ -17,38 +17,35 @@ end
 -- - `sourcePath` - Path to referenced file in the source tree
 -- 
 local function LocateReferences( document, documentSourcePath )
-    local basePath = FS.dirName(documentSourcePath)
     local references = {}
+
+    -- collect references
     for node, entering, nodeType in cmark.walk(document) do
         if entering and
            (nodeType == cmark.NODE_LINK or
             nodeType == cmark.NODE_IMAGE) then
             local url = cmark.node_get_url(node)
-            local isLocalPath = IsUrlLocalPath(url)
-            if nodeType == cmark.NODE_IMAGE and not isLocalPath then
-                error('No external images allowed.')
-            end
             local reference = { node = node,
                                 url = url }
-            if isLocalPath then
-                reference.sourcePath = utils.resolveLocalUrlToPath(url, basePath)
-            end
             table.insert(references, reference)
         end
     end
-    return references
-end
 
----
--- Generates a `resultPath` entry for each reference and modifies the URL accordingly.
---
--- @param documents
--- - document source path (relative path in source tree)
--- - document result path (relative path in result tree)
--- - fragment map (maps fragment ids to fragments)
---
-local function ResolveLocalReferences( references, documents )
-    -- TODO
+    -- resolve local paths
+    local convert = require 'website/convert' -- not cool man
+    local basePath = FS.dirName(documentSourcePath)
+    for _, reference in ipairs(references) do
+        local url = reference.url
+        if IsUrlLocalPath(url) then
+            if url[1] ~= '/' then -- only relative paths
+                reference.sourcePath = utils.resolveRelativePath(url, basePath)
+            end
+            reference.url = convert.getConversionInfo(url)
+            cmark.node_set_url(reference.node, reference.url);
+        end
+    end
+
+    return references
 end
 
 return { locate = LocateReferences }

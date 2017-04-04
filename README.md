@@ -9,9 +9,11 @@ Runtime dependencies
 
 - Lua 5.1+
 - Lua packages:
-  - LuaFileSystem
-  - CMark
-  - Lustache
+  - [LuaFileSystem](https://github.com/keplerproject/luafilesystem)
+  - [CMark](https://github.com/jgm/cmark-lua)
+  - [Lustache](https://github.com/Olivine-Labs/lustache)
+- [fonttools](https://github.com/fonttools/fonttools)
+- [Sass compiler](https://github.com/sass/sassc)
 
 
 Development dependencies
@@ -19,10 +21,10 @@ Development dependencies
 
 - prove (usually provided by Perl)
 - Lua packages:
-  - LuaCov
-  - LuaCov-Console
-  - LuaCheck
-  - Lua-TestMore
+  - [LuaCov](http://keplerproject.github.io/luacov)
+  - [LuaCov-Console](https://github.com/spacewander/luacov-console)
+  - [LuaCheck](https://github.com/mpeterv/luacheck)
+  - [Lua-TestMore](http://fperrad.github.io/lua-TestMore)
 
 
 Layout

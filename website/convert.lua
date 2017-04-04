@@ -35,7 +35,6 @@ local function ConvertMarkdown( cfg, fileDb, fileInfo )
             local referenceFileInfo = Convert(cfg, fileDb, reference.sourcePath)
             fileDb:createDependency(fileInfo, referenceFileInfo)
             reference.resultPath = referenceFileInfo.resultFile
-            -- TODO: Adapt reference URLs (see ResolveLocalReferences)
         end
     end
 
@@ -102,9 +101,10 @@ end
 Convert = function( cfg, fileDb, sourceFile )
     local resultFile, converter = GetConversionInfo(sourceFile)
 
-    local absSourceFile = FS.path(cfg.sourceTreeRoot, sourceFile)
-    local absResultFile = FS.path(cfg.resultTreeRoot, resultFile)
-    if NotExistingOrOlder(absResultFile, absSourceFile) then
+    --local absSourceFile = FS.path(cfg.sourceTreeRoot, sourceFile)
+    --local absResultFile = FS.path(cfg.resultTreeRoot, resultFile)
+    --if NotExistingOrOlder(absResultFile, absSourceFile) then
+    if not fileDb.byResultFile[resultFile] then
         local fileInfo = fileDb:createOrReplaceFile(sourceFile, resultFile)
         fileInfo.conversionResult =
             converter(cfg, fileDb, fileInfo)
@@ -136,4 +136,5 @@ local function ConvertTree( cfg, fileDb )
     end
 end
 
-return { convertTree = ConvertTree }
+return { getConversionInfo = GetConversionInfo,
+         convertTree = ConvertTree }
