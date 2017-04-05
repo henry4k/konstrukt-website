@@ -54,7 +54,6 @@ local function CheckDocument( document )
     -- - ...
 end
 
-
 return { parse = Parse,
          render = Render,
          renderChildren = RenderChildren,

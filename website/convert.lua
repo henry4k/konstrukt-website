@@ -3,6 +3,7 @@ local utils = require 'website/utils'
 local markdown = require 'website/markdown'
 local fragments = require 'website/fragments'
 local references = require 'website/references'
+local code = require 'website/code'
 local lustache = require 'lustache'
 local lfs = require 'lfs'
 
@@ -27,6 +28,7 @@ local function ConvertMarkdown( cfg, fileDb, fileInfo )
           absResultFile = PrepareFileConversion(cfg, fileInfo)
 
     local document = markdown.parse(FS.readFile(absSourceFile))
+    code.highlightCodeBlocks(document)
     local fragmentTree, fragmentList = fragments.generate(document)
     local referenceList = references.locate(document, fileInfo.sourceFile)
 
@@ -127,13 +129,13 @@ local function ConvertTree( cfg, fileDb )
     -- TODO: Check references?
 
     -- Remove all superfluous files from the result tree:
-    for resultFile in utils.directoryTree('', cfg.resultTreeRoot..FS.dirSep) do
-        local absResultFile = FS.path(cfg.resultTreeRoot, resultFile)
-        if not fileDb.byResultFile[resultFile] and
-           lfs.attributes(absResultFile, 'mode') ~= 'directory' then
-            assert(os.remove(absResultFile))
-        end
-    end
+    --for resultFile in utils.directoryTree('', cfg.resultTreeRoot..FS.dirSep) do
+    --    local absResultFile = FS.path(cfg.resultTreeRoot, resultFile)
+    --    if not fileDb.byResultFile[resultFile] and
+    --       lfs.attributes(absResultFile, 'mode') ~= 'directory' then
+    --        assert(os.remove(absResultFile))
+    --    end
+    --end
 end
 
 return { getConversionInfo = GetConversionInfo,
