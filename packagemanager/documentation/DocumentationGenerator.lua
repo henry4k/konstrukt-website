@@ -7,11 +7,11 @@ local lustache = require 'lustache'
 
 local MediaHandlers =
 {
-    png = function( node )
+    png = function()
         -- Nothing to do here
     end,
 
-    webm = function( node )
+    webm = function()
         error('WebM is not supported yet.')
     end
 }
@@ -22,7 +22,7 @@ local DocumentParsers =
         return Markdown.parse(fileContent)
     end,
 
-    lua = function( fileContent )
+    lua = function()
         error('Parsing Lua is not supported yet.')
     end
 }
@@ -92,7 +92,7 @@ local function ResolveReference( sourceDir, reference )
     reference.url = url
 end
 
-local function RenderDocument( templateHtml, sourceFileName, document )
+local function RenderDocument( templateHtml, document )
     local contentHtml = Markdown.render(document.rootNode)
     local title = document.headingTree[1].name
 
@@ -156,7 +156,7 @@ local function Generate( sourceTree, resultTree )
     -- Dokumente als HTML gerendert in den Ziel-Baum schreiben
     local templateHtml = FS.readFile('template.html')
     for sourceFileName, document in pairs(documents) do
-        local html = RenderDocument(templateHtml, sourceFileName, document)
+        local html = RenderDocument(templateHtml, document)
         local resultFileName = FS.stripExtension(sourceFileName)..'.html'
         local absResultFileName = FS.path(resultTree, resultFileName)
         FS.makeDirectoryPath(resultTree, FS.dirName(resultFileName))

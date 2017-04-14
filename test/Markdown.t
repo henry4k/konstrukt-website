@@ -3,7 +3,7 @@
 dofile 'test/common.lua'
 local Markdown = require 'packagemanager/documentation/Markdown'
 
-plan(24)
+plan(16)
 
 
 -- Markdown.locateHeadings

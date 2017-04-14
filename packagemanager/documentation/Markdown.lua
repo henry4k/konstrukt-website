@@ -15,10 +15,12 @@ local function RenderChildren( parent )
 
     -- Gather child nodes:
     local children = {}
-    local child = cmark.node_first_child(parent)
-    while(child) do
-        table.insert(children, child)
-        child = cmark.node_next(child)
+    do
+        local child = cmark.node_first_child(parent)
+        while(child) do
+            table.insert(children, child)
+            child = cmark.node_next(child)
+        end
     end
 
     -- Move all child nodes to a temporary container:

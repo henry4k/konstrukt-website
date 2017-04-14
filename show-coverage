@@ -1,5 +1,5 @@
 #!/bin/sh
 rm -f luacov.stats.out
 prove test
-luacov-console ./website
+luacov-console ./packagemanager/documentation
 luacov-console -s

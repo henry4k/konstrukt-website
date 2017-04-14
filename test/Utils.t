@@ -3,7 +3,7 @@
 dofile 'test/common.lua'
 local Utils = require 'packagemanager/documentation/Utils'
 
-plan(7)
+plan(9)
 
 is(Utils.stripHtmlTags('a<div>b</div>c'), 'abc')
 

@@ -4,7 +4,7 @@ dofile 'test/common.lua'
 local Markdown = require 'packagemanager/documentation/Markdown'
 local DocGen   = require 'packagemanager/documentation/DocumentationGenerator'
 
-plan(24)
+plan(21)
 
 
 -- DocGen.resolveReference

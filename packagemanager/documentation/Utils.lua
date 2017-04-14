@@ -5,6 +5,7 @@ local function StripHtmlTags( html )
     return string.gsub(html, '<.->', '')
 end
 
+-- luacheck: push ignore 542
 local function CanonicalizeRelativePath( path )
     local elements = {}
     for element in string.gmatch(path, '[^/]+') do
@@ -20,6 +21,7 @@ local function CanonicalizeRelativePath( path )
     end
     return table.concat(elements, '/')
 end
+-- luacheck: pop
 
 local function ResolveRelativePath( path, basePath )
     local relativePath
@@ -35,9 +37,7 @@ local function DirectoryTree( filePath, prefix )
     prefix = prefix or ''
     local function yieldTree( directory )
         for entry in lfs.dir(prefix..directory) do
-            if entry == '.' or entry == '..' then
-                -- ignore
-            else
+            if entry ~= '.' and entry ~= '..' then
                 local entryPath
                 if directory == '' then
                     entryPath = entry

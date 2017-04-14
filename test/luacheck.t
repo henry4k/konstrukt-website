@@ -1,3 +1,3 @@
 #!/bin/sh
-luacheck --formatter TAP website
+luacheck --formatter TAP packagemanager/documentation
 exit 0
