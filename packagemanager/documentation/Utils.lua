@@ -1,6 +1,10 @@
 local lfs = require 'lfs'
 
 
+local function IsUrlLocalPath( url )
+    return not string.match(url, '^.-://')
+end
+
 local function StripHtmlTags( html )
     return string.gsub(html, '<.->', '')
 end
@@ -54,7 +58,8 @@ local function DirectoryTree( filePath, prefix )
     return coroutine.wrap(function() yieldTree(filePath) end)
 end
 
-return { stripHtmlTags = StripHtmlTags,
+return { isUrlLocalPath = IsUrlLocalPath,
+         stripHtmlTags = StripHtmlTags,
          canonicalizeRelativePath = CanonicalizeRelativePath,
          resolveRelativePath = ResolveRelativePath,
          directoryTree = DirectoryTree }

@@ -3,7 +3,12 @@
 dofile 'test/common.lua'
 local Utils = require 'packagemanager/documentation/Utils'
 
-plan(9)
+plan(12)
+
+
+nok(Utils.isUrlLocalPath('http://example.org'))
+ok(Utils.isUrlLocalPath('aaa/bbb/../ccc.png'))
+ok(Utils.isUrlLocalPath('/aaa/bbb/../ccc.png'))
 
 is(Utils.stripHtmlTags('a<div>b</div>c'), 'abc')
 
