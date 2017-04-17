@@ -1,6 +1,5 @@
 local lustache  = require 'lustache'
 local FS        = require 'packagemanager/FS'
-local TreeView  = require 'packagemanager/TreeView'
 local Utils     = require 'packagemanager/documentation/Utils'
 local Markdown  = require 'packagemanager/documentation/Markdown'
 local Document  = require 'packagemanager/documentation/Document'

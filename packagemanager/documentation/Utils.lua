@@ -1,5 +1,4 @@
-local lfs = require 'lfs'
-local FS  = require 'packagemanager/FS'
+local FS = require 'packagemanager/FS'
 
 
 local function IsUrlLocalPath( url )
