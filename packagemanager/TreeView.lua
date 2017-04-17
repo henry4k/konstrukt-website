@@ -1,6 +1,8 @@
-local FS = require 'website/fs'
-local Utils = require 'website/utils'
-local Misc = require 'packagemanager/misc'
+local lfs   = require 'lfs'
+local zip   = require 'brimworks.zip'
+local FS    = require 'packagemanager/FS'
+local Misc  = require 'packagemanager/Misc'
+local Utils = require 'packagemanager/documentation/Utils'
 
 
 -------- DirectoryView
@@ -8,15 +10,50 @@ local Misc = require 'packagemanager/misc'
 local DirectoryView = {}
 DirectoryView.__index = DirectoryView
 
-function DirectoryView:readFile( fileName )
-    return FS.readFile(FS.path(self._path, fileName))
+function DirectoryView:_getAbsFilePath( filePath, createDir )
+    filePath = Utils.canonicalizeRelativePath(filePath)
+    assert(not filePath:match('^%.%.[/\\]'),
+           'File path may not leave the base directory.')
+    if createDir then
+        local dirName = FS.dirName(filePath)
+        if dirName ~= '.' then
+            assert(FS.makeDirectoryPath(self._path, dirName))
+        end
+    end
+    return FS.path(self._path, filePath)
 end
 
-function DirectoryView:extractFile( fileName, destinationPath )
-    local sourcePath = FS.path(self._path, fileName)
-    local sourceFile = assert(io.open(sourcePath, 'rb'))
-    local destinationFile = assert(io.open(destinationPath, 'wb'))
-    Misc.writeFile(destinationFile, sourceFile)
+function DirectoryView:openFile( filePath, mode )
+    local absFilePath = self:_getAbsFilePath(filePath, mode == 'w')
+    return assert(io.open(absFilePath, mode..'b'))
+end
+
+-- - size (in bytes)
+-- - modification (unix timestamp)
+function DirectoryView:getFileAttributes( filePath )
+    local absFilePath = self:_getAbsFilePath(filePath)
+    return lfs.attributes(absFilePath)
+end
+
+function DirectoryView:eachFile()
+    local prefix = self._path..FS.dirSep
+    local function yieldTree( directory )
+        for entry in lfs.dir(prefix..directory) do
+            if entry ~= '.' and entry ~= '..' then
+                local entryPath
+                if directory == '' then
+                    entryPath = entry
+                else
+                    entryPath = directory..FS.dirSep..entry
+                end
+                coroutine.yield(entryPath)
+                if lfs.attributes(prefix..entryPath, 'mode') == 'directory' then
+                    yieldTree(entryPath)
+                end
+            end
+        end
+    end
+    return coroutine.wrap(function() yieldTree('') end)
 end
 
 function DirectoryView:destroy()
@@ -24,38 +61,110 @@ function DirectoryView:destroy()
 end
 
 local function CreateDirectoryView( path )
-    local self = setmetatable({}, DirectoryView)
-
-    self._path = path
-
-    local files = {}
-    for fileName in Utils.directoryTree('', path..FS.dirSep) do
-        table.insert(files, fileName)
-    end
-    self.files = files
-
-    return self
+    return setmetatable({ _path = path }, DirectoryView)
 end
 
+-------- ZipFileStream
+
+local ZipFileStream = {}
+ZipFileStream.__index = ZipFileStream
+
+function ZipFileStream:read( length )
+    local bytes
+    if type(length) == 'number' then
+        bytes = length
+    else
+        if length == '*a' then
+            bytes = self._size
+            -- actually one would need to take the position into account
+        else
+            error(string.format('Read mode "%s" not supported.', length))
+        end
+    end
+    return self._handle:read(bytes)
+end
+
+function ZipFileStream:lines()
+    error('Line iterator is not implemented.')
+end
+
+function ZipFileStream:seek()
+    error('Seeking is not supported.')
+end
+
+function ZipFileStream:close()
+    self._handle:close()
+    self._handle = nil
+end
+
+local function CreateZipFileStream( handle, size )
+    return setmetatable({ _handle = handle,
+                          _size = size }, ZipFileStream)
+end
 
 -------- ZipView
 
 local ZipView = {}
 ZipView.__index = ZipView
 
-function ZipView:readFile( fileName )
+function ZipView:_getFileId( filePath )
+    filePath = Utils.canonicalizeRelativePath(filePath)
+    assert(not filePath:match('^%.%.[/\\]'),
+           'File path may not leave the base directory.')
+    local fileId = assert(self._fileMapping[filePath], 'No such file.')
+    return fileId
 end
 
-function ZipView:extractFile( fileName, destinationPath )
+function ZipView:openFile( filePath, mode )
+    if mode == 'r' then
+        local fileId = self:_getFileId(filePath)
+        local handle = assert(self._zipFile:open(fileId))
+        local size = assert(self._zipFile:stat(fileId).size)
+        return CreateZipFileStream(handle, size)
+    else
+        error('Can\'t modify ZIP archives.')
+    end
+end
+
+-- - size (in bytes)
+-- - modification (unix timestamp)
+function ZipView:getFileAttributes( filePath )
+    local stat = self._zipFile:stat(self:_getFileId(filePath))
+    return { size = stat.size,
+             modification = stat.mtime }
+end
+
+function ZipView:eachFile()
+    return pairs(self._fileMapping)
 end
 
 function ZipView:destroy()
+    self._zipFile:close()
+    self._zipFile = nil
+end
+
+local function NormalizeDirSeps( path )
+    return path:gsub('[/\\]', FS.dirSep)
+end
+
+local function IsDirectory( path )
+    return path:match('[/\\]$')
 end
 
 local function CreateZipView( path )
-    error('ZipView is not implemented yet.')
-    local self = setmetatable({}, ZipView)
-    return self
+    local zipFile = assert(zip.open(path))
+
+    local fileMapping = {}
+    for i = 1, zipFile:get_num_files() do
+        local filePath = assert(zipFile:stat(i)).name
+        if not IsDirectory(filePath) then
+            local normalizedFilePath = NormalizeDirSeps(filePath)
+            fileMapping[normalizedFilePath] = i
+        end
+    end
+
+    return setmetatable({ _zipFile = zipFile,
+                          _fileMapping = fileMapping }, ZipView)
 end
 
 

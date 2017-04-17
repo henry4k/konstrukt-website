@@ -1,6 +1,6 @@
-local Utils = require 'packagemanager/documentation/Utils'
+local FS       = require 'packagemanager/FS'
 local Markdown = require 'packagemanager/documentation/Markdown'
-local FS = require 'packagemanager/FS'
+
 
 local DocumentTypes =
 {
@@ -25,12 +25,13 @@ end
 
 local function IterDocuments( sourceTree )
     return coroutine.wrap(function()
-        for filePath in Utils.directoryTree('', sourceTree..FS.dirSep) do
+        for filePath in sourceTree:eachFile() do
             local extension = FS.extension(filePath)
             local documentType = GetDocumentType(extension)
             if documentType then
-                local absFilePath = FS.path(sourceTree, filePath)
-                local fileContent = FS.readFile(absFilePath)
+                local file = sourceTree:openFile(filePath, 'r')
+                local fileContent = file:read('*a')
+                file:close()
                 local rootNode = documentType.parser(fileContent)
                 coroutine.yield(filePath, rootNode)
             end

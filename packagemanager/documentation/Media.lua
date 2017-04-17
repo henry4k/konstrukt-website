@@ -1,4 +1,3 @@
-local lfs   = require 'lfs'
 local cmark = require 'cmark'
 local FS    = require 'packagemanager/FS'
 local Misc  = require 'packagemanager/Misc'
@@ -71,11 +70,8 @@ end
 
 local function ProcessMediaFiles( mediaFiles, sourceTree, resultTree )
     for fileName in pairs(mediaFiles) do
-        local absSourceFileName = FS.path(sourceTree, fileName)
-        local absResultFileName = FS.path(resultTree, fileName)
-
         -- Check file size:
-        local size = assert(lfs.attributes(absSourceFileName, 'size'))
+        local size = sourceTree:getFileAttributes(fileName).size
         local extension = FS.extension(fileName)
         local mediaType = GetMediaType(extension)
         if size > mediaType.maxSize then
@@ -85,9 +81,8 @@ local function ProcessMediaFiles( mediaFiles, sourceTree, resultTree )
         end
 
         -- Copy file:
-        FS.makeDirectoryPath(resultTree, FS.dirName(fileName))
-        local sourceFile = assert(io.open(absSourceFileName, 'rb'))
-        local resultFile = assert(io.open(absResultFileName, 'wb'))
+        local sourceFile = assert(sourceTree:openFile(fileName, 'r'))
+        local resultFile = assert(resultTree:openFile(fileName, 'w'))
         Misc.writeFile(resultFile, sourceFile)
         sourceFile:close()
         resultFile:close()

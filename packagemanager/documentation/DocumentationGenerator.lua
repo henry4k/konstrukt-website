@@ -1,5 +1,6 @@
 local lustache  = require 'lustache'
 local FS        = require 'packagemanager/FS'
+local TreeView  = require 'packagemanager/TreeView'
 local Utils     = require 'packagemanager/documentation/Utils'
 local Markdown  = require 'packagemanager/documentation/Markdown'
 local Document  = require 'packagemanager/documentation/Document'
@@ -52,9 +53,9 @@ local function Generate( sourceTree, resultTree )
                                     rootNode,
                                     headingProcessor.headingTree)
         local resultFileName = FS.stripExtension(sourceFileName)..'.html'
-        local absResultFileName = FS.path(resultTree, resultFileName)
-        FS.makeDirectoryPath(resultTree, FS.dirName(resultFileName))
-        FS.writeFile(absResultFileName, html)
+        local resultFile = resultTree:openFile(resultFileName, 'w')
+        resultFile:write(html)
+        resultFile:close()
     end
 
     Media.processMediaFiles(mediaFiles, sourceTree, resultTree)
